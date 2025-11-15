@@ -24,7 +24,36 @@ git clone <repository-url>
 cd sh-scripting
 ```
 
-The launcher script ([run.sh](run.sh)) will automatically make scripts executable when needed.
+### Option 1: Automatic (Recommended)
+
+The launcher script will automatically make scripts executable when needed:
+
+```bash
+./run.sh
+```
+
+If you get a permission denied error on first run, make run.sh executable:
+
+```bash
+chmod +x run.sh
+./run.sh
+```
+
+### Option 2: Manual Setup
+
+Make all scripts executable at once:
+
+```bash
+chmod +x run.sh
+chmod +x lib/*.sh
+chmod +x scripts/**/*.sh
+```
+
+Or use find:
+
+```bash
+find . -name "*.sh" -type f -exec chmod +x {} \;
+```
 
 ## 🎯 Main Launcher
 
