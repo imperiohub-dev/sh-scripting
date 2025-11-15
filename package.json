@@ -2,10 +2,10 @@
   "name": "@imperiohub/cli",
   "version": "1.0.0",
   "description": "CLI tool for quickly setting up backend projects with Express, TypeScript/JavaScript, and popular packages",
-  "main": "run.sh",
+  "main": "bin/imperiohub",
   "bin": {
-    "imperiohub": "./run.sh",
-    "imperiohub-cli": "./run.sh"
+    "imperiohub": "./bin/imperiohub",
+    "imperiohub-cli": "./bin/imperiohub"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/imperiohub-dev/sh-scripting#readme",
   "files": [
+    "bin/",
     "run.sh",
     "lib/",
     "scripts/",
