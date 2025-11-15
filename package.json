@@ -1,6 +1,6 @@
 {
   "name": "@imperiohub/cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI tool for quickly setting up backend projects with Express, TypeScript/JavaScript, and popular packages",
   "main": "bin/imperiohub",
   "bin": {
