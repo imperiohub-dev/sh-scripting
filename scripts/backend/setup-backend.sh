@@ -67,11 +67,43 @@ main() {
     # Step 5: Seleccionar dependencias opcionales
     echo ""
     local optional_packages
-    optional_packages=$(multi_select_simple "Optional packages" "CORS" "dotenv" "morgan (logger)" "winston (logger)" "zod (validation)" "joi (validation)")
+    optional_packages=$(multi_select_simple "Optional packages" \
+        "CORS" \
+        "dotenv" \
+        "helmet (security)" \
+        "bcrypt (encryption)" \
+        "jsonwebtoken (JWT)" \
+        "passport (authentication)" \
+        "express-validator (validation)" \
+        "zod (validation)" \
+        "joi (validation)" \
+        "mongoose (MongoDB)" \
+        "express-rate-limit (rate limiting)" \
+        "compression (response compression)" \
+        "cookie-parser (cookie parsing)" \
+        "multer (file uploads)" \
+        "nodemailer (email)" \
+        "axios (HTTP client)" \
+        "uuid (unique IDs)" \
+        "morgan (logger)" \
+        "winston (logger)")
 
     # Parsear selecciones
     local use_cors=false
     local use_dotenv=false
+    local use_helmet=false
+    local use_bcrypt=false
+    local use_jwt=false
+    local use_passport=false
+    local use_express_validator=false
+    local use_mongoose=false
+    local use_rate_limit=false
+    local use_compression=false
+    local use_cookie_parser=false
+    local use_multer=false
+    local use_nodemailer=false
+    local use_axios=false
+    local use_uuid=false
     local logger="none"
     local validator="none"
 
@@ -80,6 +112,19 @@ main() {
         case "$package" in
             *"CORS"*) use_cors=true ;;
             *"dotenv"*) use_dotenv=true ;;
+            *"helmet"*) use_helmet=true ;;
+            *"bcrypt"*) use_bcrypt=true ;;
+            *"jsonwebtoken"*) use_jwt=true ;;
+            *"passport"*) use_passport=true ;;
+            *"express-validator"*) use_express_validator=true ;;
+            *"mongoose"*) use_mongoose=true ;;
+            *"express-rate-limit"*) use_rate_limit=true ;;
+            *"compression"*) use_compression=true ;;
+            *"cookie-parser"*) use_cookie_parser=true ;;
+            *"multer"*) use_multer=true ;;
+            *"nodemailer"*) use_nodemailer=true ;;
+            *"axios"*) use_axios=true ;;
+            *"uuid"*) use_uuid=true ;;
             *"morgan"*) logger="morgan" ;;
             *"winston"*) logger="winston" ;;
             *"zod"*) validator="zod" ;;
@@ -131,6 +176,58 @@ main() {
         dependencies+=",\n    \"dotenv\": \"^16.3.1\""
     fi
 
+    if [ "$use_helmet" = true ]; then
+        dependencies+=",\n    \"helmet\": \"^7.1.0\""
+    fi
+
+    if [ "$use_bcrypt" = true ]; then
+        dependencies+=",\n    \"bcrypt\": \"^5.1.1\""
+    fi
+
+    if [ "$use_jwt" = true ]; then
+        dependencies+=",\n    \"jsonwebtoken\": \"^9.0.2\""
+    fi
+
+    if [ "$use_passport" = true ]; then
+        dependencies+=",\n    \"passport\": \"^0.7.0\",\n    \"passport-local\": \"^1.0.0\""
+    fi
+
+    if [ "$use_express_validator" = true ]; then
+        dependencies+=",\n    \"express-validator\": \"^7.0.1\""
+    fi
+
+    if [ "$use_mongoose" = true ]; then
+        dependencies+=",\n    \"mongoose\": \"^8.0.3\""
+    fi
+
+    if [ "$use_rate_limit" = true ]; then
+        dependencies+=",\n    \"express-rate-limit\": \"^7.1.5\""
+    fi
+
+    if [ "$use_compression" = true ]; then
+        dependencies+=",\n    \"compression\": \"^1.7.4\""
+    fi
+
+    if [ "$use_cookie_parser" = true ]; then
+        dependencies+=",\n    \"cookie-parser\": \"^1.4.6\""
+    fi
+
+    if [ "$use_multer" = true ]; then
+        dependencies+=",\n    \"multer\": \"^1.4.5-lts.1\""
+    fi
+
+    if [ "$use_nodemailer" = true ]; then
+        dependencies+=",\n    \"nodemailer\": \"^6.9.7\""
+    fi
+
+    if [ "$use_axios" = true ]; then
+        dependencies+=",\n    \"axios\": \"^1.6.2\""
+    fi
+
+    if [ "$use_uuid" = true ]; then
+        dependencies+=",\n    \"uuid\": \"^9.0.1\""
+    fi
+
     case "$logger" in
         morgan)
             dependencies+=",\n    \"morgan\": \"^1.10.0\""
@@ -155,6 +252,38 @@ main() {
 
         if [ "$use_cors" = true ]; then
             dev_dependencies+=",\n    \"@types/cors\": \"^2.8.17\""
+        fi
+
+        if [ "$use_bcrypt" = true ]; then
+            dev_dependencies+=",\n    \"@types/bcrypt\": \"^5.0.2\""
+        fi
+
+        if [ "$use_jwt" = true ]; then
+            dev_dependencies+=",\n    \"@types/jsonwebtoken\": \"^9.0.5\""
+        fi
+
+        if [ "$use_passport" = true ]; then
+            dev_dependencies+=",\n    \"@types/passport\": \"^1.0.16\",\n    \"@types/passport-local\": \"^1.0.38\""
+        fi
+
+        if [ "$use_compression" = true ]; then
+            dev_dependencies+=",\n    \"@types/compression\": \"^1.7.5\""
+        fi
+
+        if [ "$use_cookie_parser" = true ]; then
+            dev_dependencies+=",\n    \"@types/cookie-parser\": \"^1.4.6\""
+        fi
+
+        if [ "$use_multer" = true ]; then
+            dev_dependencies+=",\n    \"@types/multer\": \"^1.4.11\""
+        fi
+
+        if [ "$use_nodemailer" = true ]; then
+            dev_dependencies+=",\n    \"@types/nodemailer\": \"^6.4.14\""
+        fi
+
+        if [ "$use_uuid" = true ]; then
+            dev_dependencies+=",\n    \"@types/uuid\": \"^9.0.7\""
         fi
 
         if [ "$logger" = "morgan" ]; then

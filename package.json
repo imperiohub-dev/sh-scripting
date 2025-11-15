@@ -1,0 +1,50 @@
+{
+  "name": "@imperiohub/cli",
+  "version": "1.0.0",
+  "description": "CLI tool for quickly setting up backend projects with Express, TypeScript/JavaScript, and popular packages",
+  "main": "run.sh",
+  "bin": {
+    "imperiohub": "./run.sh",
+    "imperiohub-cli": "./run.sh"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "backend",
+    "express",
+    "typescript",
+    "javascript",
+    "scaffold",
+    "generator",
+    "terminal",
+    "shell",
+    "setup"
+  ],
+  "author": "ImperioHub",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imperiohub-dev/sh-scripting.git"
+  },
+  "bugs": {
+    "url": "https://github.com/imperiohub-dev/sh-scripting/issues"
+  },
+  "homepage": "https://github.com/imperiohub-dev/sh-scripting#readme",
+  "files": [
+    "run.sh",
+    "lib/",
+    "scripts/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ]
+}

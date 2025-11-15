@@ -1,12 +1,29 @@
-# Shell Scripting Utilities
+# @imperiohub/cli
 
-A collection of useful shell scripts to automate common development tasks.
+> CLI tool for quickly setting up backend projects with Express, TypeScript/JavaScript, and popular packages
+
+A collection of useful shell scripts to automate common development tasks through an interactive terminal interface.
 
 ## 🚀 Quick Start
 
+### Via NPM (Recommended)
+
+```bash
+# Run directly with npx (no installation needed)
+npx @imperiohub/cli
+
+# Or install globally
+npm install -g @imperiohub/cli
+
+# Then run
+imperiohub
+```
+
+### Via Git Clone
+
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/imperiohub-dev/sh-scripting.git
 cd sh-scripting
 
 # Run the interactive launcher
@@ -17,10 +34,26 @@ That's it! The launcher will guide you through all available scripts with an int
 
 ## 📦 Installation
 
+### Option 1: NPM Package (Recommended)
+
+Install globally to use anywhere:
+
+```bash
+npm install -g @imperiohub/cli
+```
+
+Or run without installing:
+
+```bash
+npx @imperiohub/cli
+```
+
+### Option 2: Clone Repository
+
 Clone this repository to your local machine:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/imperiohub-dev/sh-scripting.git
 cd sh-scripting
 ```
 
@@ -92,8 +125,17 @@ When you run `./run.sh` without arguments, you'll see:
 - **Setup Backend Project** - Create a Node.js backend with Express
   - Supports TypeScript or JavaScript
   - Interactive configuration
-  - Optional packages: CORS, dotenv, loggers, validators
-  - Ready-to-use project structure
+  - **30+ Optional packages**:
+    - **Security**: helmet, bcrypt, jsonwebtoken, passport
+    - **Validation**: express-validator, zod, joi
+    - **Database**: mongoose (MongoDB)
+    - **Performance**: compression, express-rate-limit
+    - **Utilities**: axios, uuid, multer, nodemailer, cookie-parser
+    - **Logging**: morgan, winston
+    - **Basics**: CORS, dotenv
+  - Ready-to-use project structure with best practices
+  - Automatic dependency installation
+  - TypeScript support with types included
 
 [View Backend Scripts Documentation](scripts/backend/README.md)
 
