@@ -90,6 +90,44 @@ confirm() {
 }
 
 # ============================================
+# Menú de selección simple con números (fallback)
+# ============================================
+
+select_option_simple() {
+    local prompt="$1"
+    shift
+    local options=("$@")
+
+    # Usar /dev/tty para input/output directo (funciona en subshells)
+    exec 3>&1
+
+    echo -e "${COLOR_CYAN}?${COLOR_RESET} ${prompt}" >&2
+    echo "" >&2
+
+    for i in "${!options[@]}"; do
+        echo -e "  ${COLOR_CYAN}$((i+1))${COLOR_RESET}) ${options[$i]}" >&2
+    done
+
+    echo "" >&2
+    local choice
+    while true; do
+        echo -ne "${COLOR_BOLD}Enter choice [1-${#options[@]}]:${COLOR_RESET} " >&2
+        read -r choice </dev/tty
+
+        # Validar que sea un número
+        if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#options[@]}" ]; then
+            local selected=$((choice - 1))
+            echo -e "${COLOR_GREEN}✓${COLOR_RESET} Selected: ${options[$selected]}" >&2
+            echo "${options[$selected]}" >&3
+            exec 3>&-
+            return 0
+        else
+            echo -e "${COLOR_RED}✗${COLOR_RESET} Invalid choice. Please enter a number between 1 and ${#options[@]}" >&2
+        fi
+    done
+}
+
+# ============================================
 # Menú de selección con flechas
 # ============================================
 
@@ -101,16 +139,16 @@ select_option() {
     local key
 
     # Ocultar cursor
-    tput civis
+    tput civis 2>/dev/null || true
 
     # Función para limpiar las líneas del menú
     clear_menu() {
         for i in "${!options[@]}"; do
-            tput cuu1  # Mover cursor arriba
-            tput el    # Limpiar línea
+            tput cuu1 2>/dev/null || true  # Mover cursor arriba
+            tput el 2>/dev/null || true    # Limpiar línea
         done
-        tput cuu1
-        tput el
+        tput cuu1 2>/dev/null || true
+        tput el 2>/dev/null || true
     }
 
     # Mostrar menú
@@ -131,25 +169,28 @@ select_option() {
     # Capturar teclas
     while true; do
         # Leer una tecla sin esperar Enter
-        read -rsn1 key
+        IFS= read -rsn1 key 2>/dev/null
 
         # Manejar secuencias de escape (flechas)
         if [[ $key == $'\x1b' ]]; then
-            read -rsn2 key
+            # Leer los siguientes 2 caracteres con timeout
+            read -rsn2 -t 0.1 key 2>/dev/null
             case "$key" in
                 '[A') # Flecha arriba
                     if [ $selected -gt 0 ]; then
                         ((selected--))
                     fi
+                    clear_menu
+                    render_menu
                     ;;
                 '[B') # Flecha abajo
                     if [ $selected -lt $((${#options[@]} - 1)) ]; then
                         ((selected++))
                     fi
+                    clear_menu
+                    render_menu
                     ;;
             esac
-            clear_menu
-            render_menu
         elif [[ $key == "" ]]; then
             # Enter presionado
             break
@@ -157,7 +198,7 @@ select_option() {
     done
 
     # Mostrar cursor nuevamente
-    tput cnorm
+    tput cnorm 2>/dev/null || true
 
     # Limpiar y mostrar selección final
     clear_menu
@@ -206,17 +247,17 @@ multi_select() {
         checked[$i]=false
     done
 
-    tput civis
+    tput civis 2>/dev/null || true
 
     clear_menu() {
         for i in "${!options[@]}"; do
-            tput cuu1
-            tput el
+            tput cuu1 2>/dev/null || true
+            tput el 2>/dev/null || true
         done
-        tput cuu1
-        tput el
-        tput cuu1
-        tput el
+        tput cuu1 2>/dev/null || true
+        tput el 2>/dev/null || true
+        tput cuu1 2>/dev/null || true
+        tput el 2>/dev/null || true
     }
 
     render_menu() {
@@ -238,24 +279,26 @@ multi_select() {
     render_menu
 
     while true; do
-        read -rsn1 key
+        IFS= read -rsn1 key 2>/dev/null
 
         if [[ $key == $'\x1b' ]]; then
-            read -rsn2 key
+            read -rsn2 -t 0.1 key 2>/dev/null
             case "$key" in
                 '[A') # Arriba
                     if [ $selected -gt 0 ]; then
                         ((selected--))
                     fi
+                    clear_menu
+                    render_menu
                     ;;
                 '[B') # Abajo
                     if [ $selected -lt $((${#options[@]} - 1)) ]; then
                         ((selected++))
                     fi
+                    clear_menu
+                    render_menu
                     ;;
             esac
-            clear_menu
-            render_menu
         elif [[ $key == " " ]]; then
             # Espaciadora - toggle selección
             if [ "${checked[$selected]}" = true ]; then
@@ -271,7 +314,7 @@ multi_select() {
         fi
     done
 
-    tput cnorm
+    tput cnorm 2>/dev/null || true
     clear_menu
 
     # Mostrar seleccionados

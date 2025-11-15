@@ -12,6 +12,17 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Import libraries
 source "${SCRIPT_DIR}/lib/ui.sh"
 
+# Use simple number-based menus by default (more compatible)
+# Set USE_ARROW_KEYS=1 to enable arrow key navigation
+USE_ARROW_KEYS="${USE_ARROW_KEYS:-0}"
+
+# Select the appropriate menu function
+if [ "$USE_ARROW_KEYS" = "1" ]; then
+    select_menu() { select_option "$@"; }
+else
+    select_menu() { select_option_simple "$@"; }
+fi
+
 # ============================================
 # Script Registry
 # Aquí se registran todos los scripts disponibles
@@ -83,10 +94,7 @@ show_category_menu() {
 
     print_header "📂 Select a Category"
 
-    local selected_category
-    selected_category=$(select_option "Choose a category" "${categories[@]}")
-
-    echo "$selected_category"
+    select_menu "Choose a category" "${categories[@]}"
 }
 
 # Mostrar menú de scripts
@@ -132,7 +140,7 @@ show_scripts_menu() {
     done
 
     local selected_script
-    selected_script=$(select_option "Choose a script to run" "${script_names[@]}")
+    selected_script=$(select_menu "Choose a script to run" "${script_names[@]}")
 
     # Encontrar el índice del script seleccionado
     for i in "${!script_names[@]}"; do
@@ -277,7 +285,6 @@ main() {
 
     while true; do
         # Mostrar menú de categorías
-        local category
         category=$(show_category_menu)
 
         # Si seleccionó Exit, salir
