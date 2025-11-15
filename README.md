@@ -2,6 +2,19 @@
 
 A collection of useful shell scripts to automate common development tasks.
 
+## 🚀 Quick Start
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd sh-scripting
+
+# Run the interactive launcher
+./run.sh
+```
+
+That's it! The launcher will guide you through all available scripts with an interactive menu.
+
 ## 📦 Installation
 
 Clone this repository to your local machine:
@@ -11,17 +24,43 @@ git clone <repository-url>
 cd sh-scripting
 ```
 
-Make sure the scripts have execution permissions:
+The launcher script ([run.sh](run.sh)) will automatically make scripts executable when needed.
+
+## 🎯 Main Launcher
+
+The easiest way to use this toolkit is through the main launcher:
 
 ```bash
-chmod +x scripts/**/*.sh
+./run.sh              # Interactive mode (recommended)
+./run.sh --list       # List all available scripts
+./run.sh --help       # Show help
+./run.sh --run <path> # Run a specific script directly
 ```
+
+### Interactive Mode
+
+When you run `./run.sh` without arguments, you'll see:
+
+1. **Welcome banner** with branding
+2. **Category selection** - Browse categories with arrow keys (↑/↓)
+3. **Script selection** - Choose a script from the category
+4. **Script execution** - The script runs and shows results
+5. **Continue prompt** - Run another script or exit
+
+### Features
+
+- ✨ **Beautiful UI** with colors and emojis
+- ⌨️ **Keyboard navigation** with arrow keys
+- 📂 **Organized by categories** (Backend, Frontend, Database, etc.)
+- 🔄 **Run multiple scripts** in one session
+- 📋 **List all scripts** with descriptions
+- 🎯 **Direct execution** of specific scripts
 
 ## 📚 Available Scripts
 
 ### Backend Scripts
 
-- **setup-backend.sh** - Create a Node.js backend project with Express
+- **Setup Backend Project** - Create a Node.js backend with Express
   - Supports TypeScript or JavaScript
   - Interactive configuration
   - Optional packages: CORS, dotenv, loggers, validators
@@ -29,44 +68,68 @@ chmod +x scripts/**/*.sh
 
 [View Backend Scripts Documentation](scripts/backend/README.md)
 
-## 🚀 Usage
+## 💡 Usage Examples
 
-### Create a Backend Project
+### Interactive Mode (Recommended)
+
+```bash
+./run.sh
+```
+
+Then use arrow keys to navigate:
+```
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║           🚀  Shell Scripting Utilities  🚀          ║
+║                                                       ║
+║         Your Swiss Army Knife for Dev Tasks          ║
+║                                                       ║
+╚═══════════════════════════════════════════════════════╝
+
+? Choose a category
+  ❯ Backend
+    Frontend
+    Database
+    Exit
+```
+
+### List All Scripts
+
+```bash
+./run.sh --list
+```
+
+### Run Specific Script Directly
+
+```bash
+./run.sh --run scripts/backend/setup-backend.sh
+```
+
+Or run the script directly:
 
 ```bash
 ./scripts/backend/setup-backend.sh
 ```
 
-The script will guide you through an interactive setup:
-1. Choose project name
-2. Select language (TypeScript or JavaScript)
-3. Configure server port
-4. Select optional packages
-5. Choose development tool
-
-The script will:
-- Create a complete project structure
-- Generate configuration files
-- Install dependencies
-- Leave everything ready to start coding
-
 ## 📁 Project Structure
 
 ```
 sh-scripting/
-├── lib/                    # Reusable libraries
-│   ├── ui.sh              # UI functions (menus, prompts, colors)
-│   ├── file-utils.sh      # File operations utilities
+├── run.sh                 # ⭐ Main launcher (start here!)
+├── CONTRIBUTING.md        # Guide for adding new scripts
+├── lib/                   # Reusable libraries
+│   ├── ui.sh             # UI functions (menus, prompts, colors)
+│   ├── file-utils.sh     # File operations utilities
 │   ├── package-manager.sh # Package manager detection and usage
-│   └── validators.sh      # Input validation functions
-├── scripts/               # Executable scripts
-│   └── backend/          # Backend-related scripts
+│   └── validators.sh     # Input validation functions
+├── scripts/              # Executable scripts organized by category
+│   └── backend/         # Backend-related scripts
 │       ├── setup-backend.sh
 │       └── README.md
-├── templates/            # File templates
-│   └── backend-ts/      # Backend templates
+├── templates/           # File templates used by scripts
+│   └── backend-ts/     # Backend templates
 │       └── files/
-└── README.md            # This file
+└── README.md           # This file
 ```
 
 ## 🛠️ Library Functions
@@ -149,12 +212,19 @@ language=$(select_option "Language" "TypeScript" "JavaScript")
 
 ## 🤝 Contributing
 
-Feel free to add new scripts and utilities! Follow the existing structure:
+Want to add a new script? It's easy!
 
-1. Place reusable functions in `lib/`
-2. Create script-specific code in `scripts/[category]/`
-3. Add templates in `templates/[category]/`
-4. Update documentation
+**Quick steps:**
+1. Create your script in `scripts/[category]/`
+2. Add it to the registry in [run.sh](run.sh)
+3. Done! It will appear in the interactive menu
+
+**For detailed instructions**, see [CONTRIBUTING.md](CONTRIBUTING.md) which includes:
+- How to structure your script
+- Using the library functions
+- Registering scripts in the launcher
+- Best practices and examples
+- Complete templates
 
 ## 📄 License
 
