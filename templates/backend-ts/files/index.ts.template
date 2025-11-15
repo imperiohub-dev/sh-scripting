@@ -1,0 +1,44 @@
+import express, { Request, Response, NextFunction } from 'express';{{CORS_IMPORT}}{{DOTENV_IMPORT}}
+const app = express();{{DOTENV_CONFIG}}
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));{{CORS_MIDDLEWARE}}{{LOGGER_MIDDLEWARE}}
+
+// Routes
+app.get('/', (req: Request, res: Response) => {
+  res.json({
+    message: 'Welcome to {{PROJECT_NAME}} API',
+    status: 'running',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/health', (req: Request, res: Response) => {
+  res.json({ status: 'ok', uptime: process.uptime() });
+});
+
+// Import routes
+// import userRoutes from './routes/user.routes';
+// app.use('/api/users', userRoutes);
+
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: 'Something went wrong!',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
+
+// 404 handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+const PORT = process.env.PORT || {{PORT}};
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+});
