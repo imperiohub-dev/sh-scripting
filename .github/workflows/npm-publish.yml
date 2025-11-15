@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write  # Required for creating releases
       id-token: write  # Required for NPM provenance
 
     steps:
@@ -48,25 +48,25 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ steps.get_version.outputs.VERSION }}
-          body: |
-            ## @imperiohub/cli v${{ steps.get_version.outputs.VERSION }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          gh release create "v${VERSION}" \
+            --title "Release v${VERSION}" \
+            --notes "## @imperiohub/cli v${VERSION}
 
-            Published to NPM: https://www.npmjs.com/package/@imperiohub/cli/v/${{ steps.get_version.outputs.VERSION }}
+          Published to NPM: https://www.npmjs.com/package/@imperiohub/cli/v/${VERSION}
 
-            ### Installation
-            ```bash
-            npm install -g @imperiohub/cli@${{ steps.get_version.outputs.VERSION }}
-            ```
+          ### Installation
+          \`\`\`bash
+          npm install -g @imperiohub/cli@${VERSION}
+          \`\`\`
 
-            ### Usage
-            ```bash
-            npx @imperiohub/cli
-            ```
-          draft: false
-          prerelease: false
+          ### Usage
+          \`\`\`bash
+          npx @imperiohub/cli
+          \`\`\`
+
+          ### What's Changed
+          Check the [commits](https://github.com/${{ github.repository }}/commits/v${VERSION}) for details."
