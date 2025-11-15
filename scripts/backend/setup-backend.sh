@@ -33,21 +33,49 @@ main() {
         exit 1
     fi
 
-    # Step 2: Solicitar nombre del proyecto
-    local project_name
-    while true; do
-        project_name=$(input "Project name" "my-backend")
-        if validate_project_name "$project_name"; then
-            break
-        fi
-    done
+    # Step 2: Preguntar si usar carpeta actual o crear nueva
+    echo ""
+    local use_current_dir
+    use_current_dir=$(select_option_simple "Project location" "Create new folder" "Use current directory")
 
-    # Verificar que el directorio no exista o esté vacío
-    if ! check_directory_available "$project_name"; then
-        if ! confirm "Directory exists. Continue anyway?"; then
-            print_info "Setup cancelled"
-            exit 0
+    local project_name
+    local project_dir
+
+    if [ "$use_current_dir" = "Use current directory" ]; then
+        # Usar directorio actual
+        project_dir=$(pwd)
+        project_name=$(basename "$project_dir")
+
+        # Verificar que el directorio actual esté vacío o casi vacío
+        local file_count=$(find . -maxdepth 1 -not -name '.' -not -name '..' -not -name '.git' | wc -l)
+        if [ "$file_count" -gt 0 ]; then
+            print_warning "Current directory is not empty"
+            if ! confirm "Continue anyway? This will add files to the current directory."; then
+                print_info "Setup cancelled"
+                exit 0
+            fi
         fi
+
+        print_info "Using current directory: $project_dir"
+        echo ""
+    else
+        # Crear nuevo directorio
+        while true; do
+            project_name=$(input "Project name" "my-backend")
+            if validate_project_name "$project_name"; then
+                break
+            fi
+        done
+
+        # Verificar que el directorio no exista o esté vacío
+        if ! check_directory_available "$project_name"; then
+            if ! confirm "Directory exists. Continue anyway?"; then
+                print_info "Setup cancelled"
+                exit 0
+            fi
+        fi
+
+        project_dir="$project_name"
     fi
 
     # Step 3: Seleccionar lenguaje
@@ -143,11 +171,12 @@ main() {
     echo ""
     print_header "📦 Creating Project Structure"
 
-    # Step 7: Crear directorio del proyecto
-    mkdir -p "$project_name"
-    cd "$project_name"
-    local project_dir
-    project_dir=$(pwd)
+    # Step 7: Crear directorio del proyecto (solo si no está usando el actual)
+    if [ "$use_current_dir" != "Use current directory" ]; then
+        mkdir -p "$project_dir"
+        cd "$project_dir"
+        project_dir=$(pwd)
+    fi
 
     # Step 8: Crear estructura de carpetas
     create_directory_structure "$project_dir" \
@@ -468,7 +497,10 @@ src/
     echo ""
     print_info "Next steps:"
     echo ""
-    echo "  cd ${project_name}"
+
+    if [ "$use_current_dir" != "Use current directory" ]; then
+        echo "  cd ${project_name}"
+    fi
 
     if [ "$use_dotenv" = true ]; then
         echo "  cp .env.example .env    # Configure your environment variables"

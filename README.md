@@ -124,8 +124,9 @@ When you run `./run.sh` without arguments, you'll see:
 
 - **Setup Backend Project** - Create a Node.js backend with Express
   - Supports TypeScript or JavaScript
+  - **Choose location**: Create new folder or use current directory
   - Interactive configuration
-  - **30+ Optional packages**:
+  - **18+ Optional packages**:
     - **Security**: helmet, bcrypt, jsonwebtoken, passport
     - **Validation**: express-validator, zod, joi
     - **Database**: mongoose (MongoDB)
@@ -138,6 +139,25 @@ When you run `./run.sh` without arguments, you'll see:
   - TypeScript support with types included
 
 [View Backend Scripts Documentation](scripts/backend/README.md)
+
+### Frontend Scripts
+
+- **Setup React + Vite Project** - Create a React application with Vite
+  - Supports TypeScript or JavaScript
+  - **Choose location**: Create new folder or use current directory
+  - Lightning-fast HMR with Vite
+  - **12+ Optional packages**:
+    - **Routing**: React Router
+    - **Styling**: TailwindCSS (auto-configured)
+    - **State**: Zustand, Redux Toolkit
+    - **Data Fetching**: TanStack Query, Axios
+    - **Forms**: React Hook Form
+    - **Validation**: Zod
+    - **Animation**: Framer Motion
+    - **Utilities**: React Icons, date-fns, clsx
+  - Automatic project structure setup
+  - Custom port configuration
+  - Production-ready build setup
 
 ## 💡 Usage Examples
 
@@ -160,7 +180,6 @@ Then use arrow keys to navigate:
 ? Choose a category
   ❯ Backend
     Frontend
-    Database
     Exit
 ```
 
@@ -304,8 +323,9 @@ MIT
 ## 🔮 Future Scripts
 
 Planned additions:
-- Frontend setup scripts (React, Vue, Angular)
-- Database setup scripts
+- More frontend frameworks (Vue, Angular, Svelte)
+- Database setup scripts (PostgreSQL, MySQL, MongoDB)
 - Docker configuration generators
 - CI/CD pipeline generators
-- Testing setup scripts
+- Testing setup scripts (Vitest, Jest, Playwright)
+- API documentation generators (Swagger, OpenAPI)

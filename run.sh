@@ -31,8 +31,8 @@ fi
 # Formato: "Categoría|Nombre del Script|Descripción|Ruta del script"
 declare -a SCRIPTS=(
     "Backend|Setup Backend Project|Create a Node.js backend with Express (TS/JS)|scripts/backend/setup-backend.sh"
+    "Frontend|Setup React + Vite Project|Create a React application with Vite (TS/JS)|scripts/frontend/setup-react.sh"
     # Agregar más scripts aquí en el futuro
-    # "Frontend|Setup React App|Create a React application|scripts/frontend/setup-react.sh"
     # "Database|Setup PostgreSQL|Configure PostgreSQL database|scripts/database/setup-postgres.sh"
 )
 
