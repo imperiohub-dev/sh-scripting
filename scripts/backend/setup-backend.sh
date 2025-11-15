@@ -52,7 +52,7 @@ main() {
 
     # Step 3: Seleccionar lenguaje
     local language
-    language=$(select_option "Select language" "TypeScript" "JavaScript")
+    language=$(select_option_simple "Select language" "TypeScript" "JavaScript")
     language=$(echo "$language" | tr '[:upper:]' '[:lower:]')
 
     # Step 4: Seleccionar puerto
@@ -65,10 +65,9 @@ main() {
     done
 
     # Step 5: Seleccionar dependencias opcionales
-    print_info "Select optional packages (use space to select, enter to confirm)"
     echo ""
     local optional_packages
-    optional_packages=$(multi_select "Optional packages" "CORS" "dotenv" "morgan (logger)" "winston (logger)" "zod (validation)" "joi (validation)")
+    optional_packages=$(multi_select_simple "Optional packages" "CORS" "dotenv" "morgan (logger)" "winston (logger)" "zod (validation)" "joi (validation)")
 
     # Parsear selecciones
     local use_cors=false
@@ -91,7 +90,7 @@ main() {
     # Step 6: Seleccionar herramienta de desarrollo
     local dev_tool
     if [ "$language" = "typescript" ]; then
-        dev_tool=$(select_option "Development tool" "tsx" "ts-node + nodemon")
+        dev_tool=$(select_option_simple "Development tool" "tsx" "ts-node + nodemon")
     else
         dev_tool="nodemon"
     fi

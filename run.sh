@@ -92,7 +92,8 @@ show_category_menu() {
     # Agregar opción de salir
     categories+=("Exit")
 
-    print_header "📂 Select a Category"
+    # Redirigir print_header a stderr para que no se capture en el subshell
+    print_header "📂 Select a Category" >&2
 
     select_menu "Choose a category" "${categories[@]}"
 }
@@ -104,7 +105,7 @@ show_scripts_menu() {
     scripts_data=$(get_scripts_by_category "$category")
 
     if [ -z "$scripts_data" ]; then
-        print_error "No scripts found in category: $category"
+        print_error "No scripts found in category: $category" >&2
         return 1
     fi
 
@@ -125,17 +126,17 @@ show_scripts_menu() {
     script_descriptions+=("Return to categories")
     script_paths+=("")
 
-    # Mostrar menú con descripciones
-    echo ""
-    print_header "🔧 ${category} Scripts"
-    echo ""
+    # Mostrar menú con descripciones (todo a stderr para no capturar en subshell)
+    echo "" >&2
+    print_header "🔧 ${category} Scripts" >&2
+    echo "" >&2
 
     # Mostrar descripción de cada script
     for i in "${!script_names[@]}"; do
         if [ "${script_names[$i]}" != "← Back" ]; then
-            echo -e "${COLOR_BOLD}${script_names[$i]}${COLOR_RESET}"
-            echo -e "  ${COLOR_BLUE}→${COLOR_RESET} ${script_descriptions[$i]}"
-            echo ""
+            echo -e "${COLOR_BOLD}${script_names[$i]}${COLOR_RESET}" >&2
+            echo -e "  ${COLOR_BLUE}→${COLOR_RESET} ${script_descriptions[$i]}" >&2
+            echo "" >&2
         fi
     done
 

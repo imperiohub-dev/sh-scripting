@@ -49,19 +49,24 @@ input() {
     local default="$2"
     local result
 
+    # Usar /dev/tty para funcionar en subshells
+    exec 3>&1
+
     if [ -n "$default" ]; then
-        echo -ne "${COLOR_CYAN}?${COLOR_RESET} ${prompt} ${COLOR_BOLD}(${default})${COLOR_RESET}: "
+        echo -ne "${COLOR_CYAN}?${COLOR_RESET} ${prompt} ${COLOR_BOLD}(${default})${COLOR_RESET}: " >&2
     else
-        echo -ne "${COLOR_CYAN}?${COLOR_RESET} ${prompt}: "
+        echo -ne "${COLOR_CYAN}?${COLOR_RESET} ${prompt}: " >&2
     fi
 
-    read -r result
+    read -r result </dev/tty
 
     if [ -z "$result" ] && [ -n "$default" ]; then
-        echo "$default"
+        echo "$default" >&3
     else
-        echo "$result"
+        echo "$result" >&3
     fi
+
+    exec 3>&-
 }
 
 # ============================================
@@ -73,13 +78,14 @@ confirm() {
     local default="${2:-y}" # y or n
     local response
 
+    # Usar /dev/tty para funcionar en subshells
     if [ "$default" = "y" ]; then
-        echo -ne "${COLOR_CYAN}?${COLOR_RESET} ${prompt} ${COLOR_BOLD}(Y/n)${COLOR_RESET}: "
+        echo -ne "${COLOR_CYAN}?${COLOR_RESET} ${prompt} ${COLOR_BOLD}(Y/n)${COLOR_RESET}: " >&2
     else
-        echo -ne "${COLOR_CYAN}?${COLOR_RESET} ${prompt} ${COLOR_BOLD}(y/N)${COLOR_RESET}: "
+        echo -ne "${COLOR_CYAN}?${COLOR_RESET} ${prompt} ${COLOR_BOLD}(y/N)${COLOR_RESET}: " >&2
     fi
 
-    read -r response
+    read -r response </dev/tty
     response=$(echo "$response" | tr '[:upper:]' '[:lower:]')
 
     if [ -z "$response" ]; then
@@ -228,6 +234,59 @@ show_spinner() {
 
     tput cnorm # Mostrar cursor
     printf "\r"
+}
+
+# ============================================
+# Menú multi-selección simple con números
+# ============================================
+
+multi_select_simple() {
+    local prompt="$1"
+    shift
+    local options=("$@")
+    local -a selected_indices=()
+
+    # Usar /dev/tty para funcionar en subshells
+    exec 3>&1
+
+    echo -e "${COLOR_CYAN}?${COLOR_RESET} ${prompt} ${COLOR_BOLD}(enter numbers separated by space, or 0 for none)${COLOR_RESET}" >&2
+    echo "" >&2
+
+    for i in "${!options[@]}"; do
+        echo -e "  ${COLOR_CYAN}$((i+1))${COLOR_RESET}) ${options[$i]}" >&2
+    done
+
+    echo "" >&2
+    local choices
+    echo -ne "${COLOR_BOLD}Enter choices [1-${#options[@]}] or 0 for none:${COLOR_RESET} " >&2
+    read -r choices </dev/tty
+
+    # Si es 0 o vacío, no seleccionar nada
+    if [ "$choices" = "0" ] || [ -z "$choices" ]; then
+        echo "" >&3
+        exec 3>&-
+        return 0
+    fi
+
+    # Parsear selecciones
+    local -a selected_items=()
+    for choice in $choices; do
+        if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#options[@]}" ]; then
+            local idx=$((choice - 1))
+            selected_items+=("${options[$idx]}")
+        fi
+    done
+
+    if [ ${#selected_items[@]} -gt 0 ]; then
+        echo -e "${COLOR_GREEN}✓${COLOR_RESET} Selected: ${selected_items[*]}" >&2
+        # Retornar items separados por coma
+        IFS=','
+        echo "${selected_items[*]}" >&3
+    else
+        echo "" >&3
+    fi
+
+    exec 3>&-
 }
 
 # ============================================
